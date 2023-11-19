@@ -5,7 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Feather} from '@expo/vector-icons';
 
 
-export default function SearchForm() {
+export default function SearchForm({onSearch}) {
 
     //use state varoable will re render component when the variable changes; smart variable that makes application "reactive"
     const [from, setFrom] = useState('');
@@ -14,7 +14,7 @@ export default function SearchForm() {
     const [returnDate, setReturn] = useState(new Date());
 
     const onSearchPress = () => {
-        console.log('Searching for: ', from);
+        onSearch({from, to, departDate, returnDate})
     };
 
     return (
