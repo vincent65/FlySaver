@@ -11,6 +11,12 @@ async function main() {
   try {
     const page = await browser.newPage();
     console.log("Connected! Navigating to https://example.com...");
+
+
+    const client = await page.target().createCDPSession();
+    await openDevtools(page, client);
+
+    
     await page.goto("https://example.com");
     console.log("Navigated! Scraping page content...");
     const html = await page.content();
