@@ -35,6 +35,7 @@ const SBR_WS_ENDPOINT =
 
     //returns the prices
   async function parseFlight(flight) {
+    //trim gets rid of unnecessary whitespaces
     const price = await flight.$eval(
       '[class^="Price_mainPriceContainer"]',
       (el) => el.textContent.trim()
@@ -51,7 +52,7 @@ const SBR_WS_ENDPOINT =
   };
 }
 
-async function main() {
+async function scrapeFlights(from, to, departDate, returnDate) {
   console.log("Connecting to Scraping Browser...");
 
   const url = `https://www.skyscanner.net/transport/flights/${from}/${to}/${departDate}/${returnDate}/`;
@@ -64,7 +65,7 @@ async function main() {
     const page = await browser.newPage();
     console.log("Connected! Navigating to https://example.com...");
 
-
+    //open the devtools
     const client = await page.target().createCDPSession();
     await openDevtools(page, client);
 
@@ -78,16 +79,13 @@ async function main() {
     const flights = await page.$$('a[class^="FlightsTicket_link"]');
     //map makes new array with result of parseFlight function on the flights data
     const data = await Promise.all(flights.map(parseFlight));
-
-    console.log("Navigated! Scraping page content...");
-    const html = await page.content();
-    console.log(html);
+    return data;
+    
   } finally {
     await browser.close();
   }
 }
 
-main().catch((err) => {
-  console.error(err.stack || err);
-  process.exit(1);
-});
+module.exports = {
+    scrapeFlights,
+};
